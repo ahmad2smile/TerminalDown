@@ -1,0 +1,136 @@
+﻿
+html{
+    background-color: #D24B54;
+    background: linear-gradient(45deg, rgba(35,25,70,1) 0%, rgba(198,75,80,1) 75%, rgba(198,75,80,1) 100%) no-repeat;
+}
+
+body{
+    background: linear-gradient(200deg, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.8) 100%);
+    min-height: 100vh;
+    color: #222;
+    font-family: Roboto Light;
+}
+
+.siteColor{
+    background-color: #1de9b6;
+    color: #222;
+}
+nav, .brand-logo .fa-terminal, .SiteName{
+    background-color: #1de9b6;
+    color: #222;
+}
+
+#profile-navbar-id > span, nav, nav a {
+    color: #222222 !important;
+}
+
+#profile-pic-id {
+    padding-right: 10px;
+}
+
+
+
+ i.fa.fa-caret-down{
+     color: #222;
+    height: 10px;
+    line-height: 35px;
+}
+
+#dropdown1 li a{
+    color: #222;
+}
+
+form#logOutForm {
+    padding: 14px 16px 14px 16px;
+}
+
+form#logOutForm a {
+    padding: 0;
+}
+
+form#logOutForm a:hover {
+    background-color: transparent;
+}
+
+.SiteName{
+    font-size: 0.8em;
+}
+
+#mobile-demo{
+    background-color: #1de9b6;
+    background: linear-gradient(45deg, rgba(35,25,70,1) 0%, #1de9b6 75%, #1de9b6 100%) no-repeat;
+}
+
+.chart .bar{
+    fill: #1de9b6;
+}
+
+.inputIcon{
+    background: none;
+    border: none;
+    font-size: 4em;
+}
+
+.inputLeft{
+    transform: rotateY(180deg);
+}
+
+.copyRightText{
+    color: #2c2c2c;
+}
+
+/*duo card desing*/ 
+
+.bottomCard, .interCard, .contentCard{
+    background-color: #FFF;
+    color: #222;
+    box-shadow: 0 1px 5px #aaa;
+    display: inline-block;
+}
+
+.bottomCard{
+    padding: 0px 0px 5px 0px;
+    
+}
+
+.interCard{
+    margin-right: -5px;
+    margin-left: -5px;
+    padding: 0px 0px 5px 0px;
+}
+
+.contentCard{
+    margin-right: -5px;
+    margin-left: -5px;
+    min-height: 500px;
+    min-width: 330px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/*duo card desing end*/ 
+
+
+#hr-mid-line{
+   text-align: center;
+    overflow: hidden; 
+}
+
+#hr-mid-line:before,
+#hr-mid-line:after {
+    background-color: rgba(68, 68, 68,0.5);
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 43%;
+}
+#hr-mid-line:before {
+    right: 0.5em;
+    margin-left: -50%;
+}
+#hr-mid-line:after {
+    left: 0.5em;
+    margin-right: -50%;
+}

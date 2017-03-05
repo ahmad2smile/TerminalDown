@@ -1,0 +1,36 @@
+﻿@model voteStuff.Models.VoteDuo
+
+
+<div class="bottomCard center-align z-depth-5">
+    <div class="interCard center-align">
+        <div class="contentCard center-align">
+
+            <div class="row">
+                <h4 id="DuoNameHead">@Model.DuoFirst vs @Model.DuoSecond</h4>
+
+                <h6>Totall Votes: @Model.DuoTotalVotes</h6>
+
+                <div class="chart"></div>
+            </div>
+
+            <div class="row">
+                <div class="col l6 m6 s6 right-align">
+                    <form action="/Home/Duos" class="formClass" method="POST" asp-antiforgery="true">
+                        <div>@Model.DuoFirst <span id="DuoFirstVotes">@Model.DuoFirstVotes</span></div>
+                        <input type="hidden" value="@Model.DuoSecond" name="VotedName" />
+                        <input type="hidden" value="@Model.Id" name="Id" />
+                        <input id="DuoFirstSubmit" type="submit" value="&#xf088;" class="fa inputIcon inputLeft siteColor" />
+                    </form>
+                </div>
+                <div class="col l6 m6 s6 left-align">
+                    <form action="/Home/Duos" class="formClass" method="POST" asp-antiforgery="true">
+                        <div>@Model.DuoSecond <span id="DuoSecondVotes">@Model.DuoSecondVotes</span></div>
+                        <input type="hidden" value="@Model.DuoFirst" name="VotedName" />
+                        <input type="hidden" value="@Model.Id" name="Id" />
+                        <input id="DuoSecondSubmit" type="submit" value="&#xf088;" class="fa inputIcon siteColor" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

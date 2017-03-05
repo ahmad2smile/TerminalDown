@@ -1,0 +1,18 @@
+﻿
+@model voteStuff.Models.VoteDuo
+
+@{
+    ViewBag.Title = $"Duo {@Model.DuoFirst} vs {@Model.DuoSecond}";
+    Layout = "_Layout";
+}
+
+﻿<div class="container">
+    <div class="row">
+        <div class="col center-align l12 m12 s12">
+            <div id="DuoFormsCon">
+                @await Component.InvokeAsync("Card", new { Id = @Model.Id })
+
+            </div>
+        </div>
+    </div>
+</div>

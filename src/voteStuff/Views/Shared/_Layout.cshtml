@@ -1,0 +1,59 @@
+﻿﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <title>@ViewBag.Title</title>
+    <link href="~/css/materialize.min.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <bodyContainer>
+        <navigation>
+            <ul id="dropdown1" class="dropdown-content">
+                <li class="active waves-effect waves-light"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="waves-effect waves-light"><a asp-controller="Home" asp-action="About">About</a></li>
+                <li class="waves-effect waves-light"><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                <li>@await Html.PartialAsync("_LoginPartial")</li>
+            </ul>
+            <nav>
+                <div class="container nav-wrapper">
+                    <a asp-controller="Home" asp-action="Index" class="brand-logo"><i class="fa fa-terminal"></i>
+                        <div class="SiteName">Terminal Down</div></a>
+                    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="fa fa-bars fa-2x"></i></a>
+                    <ul class="hide-on-med-and-down right">
+                        <li id="profile-navbar-id">@await Component.InvokeAsync("Profile")</li>
+                        <li><a class="dropdown-button" href="javascript:return void;" data-activates="dropdown1"><i class="fa fa-caret-down"></i></a></li>
+                    </ul>
+                    <ul class="side-nav" id="mobile-demo">
+                        <li class="waves-effect waves-light"><a class="active" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="waves-effect waves-light"><a asp-controller="Home" asp-action="About">About</a></li>
+                        <li class="waves-effect waves-light"><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <li>@await Html.PartialAsync("_LoginPartial")</li>
+                    </ul>
+                </div>
+            </nav>
+        </navigation>
+        <mainBody>
+
+            <div>@RenderBody()</div>
+
+        </mainBody>
+        <div class="page-footer">
+            <footer class="footer-copyright">
+                <div class="copyRightText">© @DateTime.Now.Year Copyright Spartan Inc. <span>(Powered by: ASP.NET Core)</span></div>
+            </footer>
+        </div>
+    </bodyContainer>
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery.signalR-2.2.1.js"></script>
+    <script src="~/js/jquery.validate.js"></script>
+    <script src="~/js/jquery.validate.unobtrusive.js"></script>
+    <script src="~/js/d3.js"></script>
+    <script src="~/js/materialize.min.js"></script>
+
+    <script src="~/js/site.js"></script>
+</body>
+</html>

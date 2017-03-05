@@ -1,0 +1,79 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using voteStuff.Entities
+@model LoginViewModel
+
+@inject SignInManager<ApplicationUser> _SingInManager
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col center-align l12 m12 s12">
+            <div class="bottomCard center-align z-depth-5">
+                <div class="interCard center-align">
+                    <div class="contentCard center-align">
+                        <div class="contactContainer">
+                            <h4>Login</h4>
+                            <form asp-antiforgery="true" asp-controller="Account" asp-action="Login" method="post" asp-route-returnurl="@ViewData["ReturnUrl"]">
+                                <div asp-validation-summary="ModelOnly"></div>
+                                <div class="input-field">
+                                    <label asp-for="UserName"></label>
+                                    <input asp-for="UserName"/>
+                                    <span asp-validation-for="UserName"></span>
+                                </div>
+
+                                <div class="input-field">
+                                    <label asp-for="Password"></label>
+                                    <input asp-for="Password"/>
+                                    <span asp-validation-for="Password"></span>
+                                </div>
+
+                                <p>
+                                    <input type="checkbox" class="filled-in"/>
+                                    <label asp-for="RememberMe"></label>
+                                </p>
+
+                                <div>
+                                    <button class="btn siteColor waves-effect waves-light" type="submit">Login</button>
+                                </div>
+
+                            </form>
+                            <br/><br />
+                            <div id="hr-mid-line">
+                                <span>or</span>
+                            </div>
+                            <br />
+                            <div>
+                                <a class="btn siteColor waves-effect waves-light" asp-action="Register" asp-controller="Account">Register</a>
+                            </div>
+                            <br />
+                            <externalLogin>
+                                @{
+                                    var loginProviders = _SingInManager.GetExternalAuthenticationSchemes().ToList();
+                                    if (loginProviders.Count == 0)
+                                    {
+                                       <span></span>
+                                    }
+                                    else
+                                    {
+                                        <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                                            <div>
+                                                    @foreach (var provider in loginProviders)
+                                                    {
+                                                        <button type="submit" class="btn siteColor waves-effect waves-light" name="provider" value="@provider.AuthenticationScheme">@provider.AuthenticationScheme</button>
+                                                    }
+                                            </div>
+                                        </form>
+                                    }
+                                }
+                            </externalLogin>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

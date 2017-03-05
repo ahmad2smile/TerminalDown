@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using voteStuff.Entities
+
+@inject SignInManager<ApplicationUser> _SingInManager
+@inject UserManager<ApplicationUser> _UserManager
+
+@if (_SingInManager.IsSignedIn(User))
+{
+    <form id="logOutForm" method="post" asp-controller="Account" asp-action="LogOff">
+        <a href="javascript:void(0);" id="logOutLink">Log off</a>
+    </form>
+}
+else
+{
+     <a asp-action="Login" asp-controller="Account">Log in</a>
+}
