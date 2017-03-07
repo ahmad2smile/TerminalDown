@@ -61,6 +61,29 @@ form#logOutForm a:hover {
     background: linear-gradient(45deg, rgba(35,25,70,1) 0%, #1de9b6 75%, #1de9b6 100%) no-repeat;
 }
 
+#mobile-demo li {
+    display: block;
+    text-align: center;
+}
+
+#mobile-demo li #profile-pic-id{
+    padding: 0;
+    display: inline;
+}
+
+#mobile-demo li a span {
+    color: #ffffff;
+}
+
+#mobile-demo li form {
+    padding: 0;
+}
+
+#mobile-demo li form a:hover {
+    background-color: rgba(85, 85, 85,0.1);
+}
+
+
 .chart .bar{
     fill: #1de9b6;
 }
