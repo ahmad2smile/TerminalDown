@@ -1,13 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using voteStuff.Entities;
 using voteStuff.Models;
+using System.Threading.Tasks;
 
 namespace voteStuff.Services
 {
     public interface IVotingService
     {
         VoteDuo GetDuo(int id);
-        VoteDuo VoteCast(int id, string votedDuoName);
+        Task<VoteDuo> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser);
     }
 
     public class VotingService: IVotingService
@@ -24,11 +27,17 @@ namespace voteStuff.Services
             return _context.VotesDb.FirstOrDefault(r => r.Id == id);
         }
 
-        public VoteDuo VoteCast(int id, string votedDuoName)
+        public async Task<VoteDuo> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser)
         {
-            VoteDuo castedDuo = _context.VotesDb.FirstOrDefault(r => r.Id == id);
+            VoteDuo castedDuo = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
+            UserVotingDb userVotingData =
+                await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == currentLogedInUser.Id);
+
             if (castedDuo != null)
             {
+                userVotingData.TotallCastedVotes += 1;
+                userVotingData.TotallVotingRights -= 1;
+
                 castedDuo.DuoTotalVotes = castedDuo.DuoFirstVotes + castedDuo.DuoSecondVotes + 1;
 
                 if (votedDuoName == castedDuo.DuoFirst)
@@ -39,8 +48,14 @@ namespace voteStuff.Services
                 {
                     castedDuo.DuoSecondVotes += 1;
                 }
+                await _context.DuoVotedByUserDbs.AddAsync(new DuoVotedByUserDb
+                {
+                    DuoID = id,
+                    UserVotingDbID = userVotingData.ID,
+                    VotingTime = DateTime.UtcNow
+                });
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             return castedDuo;

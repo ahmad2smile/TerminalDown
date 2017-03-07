@@ -99,12 +99,27 @@ namespace voteStuff.Controllers
 
                 var extUserCreatResult = await _userManager.CreateAsync(user);
 
+                //Gifted Votes at time of Registration
+                int numberOfGiftedVotes = 5;
+
                 if (extUserCreatResult.Succeeded)
                 {
                     var extRegisterLoginResult = await _userManager.AddLoginAsync(user, info);
                     if (extRegisterLoginResult.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+
+                        await _context.UserVotingDbs.AddAsync(new UserVotingDb
+                        {
+                            UserID = user.Id,
+                            LastTimeVotesGifted = DateTime.UtcNow,
+                            LastTotallVotesGifted = numberOfGiftedVotes,
+                            TotallCastedVotes = 0,
+                            TotallVotingRights = numberOfGiftedVotes
+                        });
+                        await _context.SaveChangesAsync();
+                        _context.Dispose();
+
                         return LocalRedirect(returnUrl);
                     }
                 }
