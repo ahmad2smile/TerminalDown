@@ -28,7 +28,15 @@ nav, .brand-logo .fa-terminal, .SiteName{
     padding-right: 10px;
 }
 
+/*badges start*/
 
+nav span.badge {
+    min-width: 0px;
+    border-radius: 50%;
+    color: #222222 !important;
+}
+
+/*badges end*/
 
  i.fa.fa-caret-down{
      color: #222;
