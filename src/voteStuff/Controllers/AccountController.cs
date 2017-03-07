@@ -25,59 +25,10 @@ namespace voteStuff.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email};
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
-                    if (returnUrl == null)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                    return LocalRedirect(returnUrl);
-                }
-            }
-            return  View(model);
-        }
-
-        [HttpGet]
         public IActionResult Login(string returnUrl)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe,
-                    lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    if (Url.IsLocalUrl(returnUrl))
-                    {
-                        return LocalRedirect(returnUrl);
-                    }
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            return View(model);
         }
 
         [HttpPost]

@@ -85,4 +85,9 @@
             $("#logOutForm").submit();
         });
 
+    $('#mobile-demo li:last-child').click(
+        function () {
+            $("#logOutForm").submit();
+        });
+
 });

@@ -7,7 +7,7 @@
 @if (_SingInManager.IsSignedIn(User))
 {
     <form id="logOutForm" method="post" asp-controller="Account" asp-action="LogOff">
-        <a href="javascript:void(0);" id="logOutLink">Log off</a>
+        <a id="logOutLink">Log off</a>
     </form>
 }
 else
