@@ -25,14 +25,14 @@ namespace voteStuff.ViewComponents
             if (_singInManager.IsSignedIn(HttpContext.User))
             {
                 var user = await _userManager.GetUserAsync(HttpContext.User);
-                string userName = user.UserName;
+                string firstName = user.FirstName;
                 var info = await _singInManager.GetExternalLoginInfoAsync();
                 var identifier = user.FbUserId;
                 var picture = $"https://graph.facebook.com/{identifier}/picture";
-                var model = new ProfileModel {name = userName, picture = picture};
+                var model = new ProfileModel {firstName = firstName, picture = picture};
                 return View("Default", model);
             }
-            return View("Default", new ProfileModel { name = "", picture = ""});
+            return View("Default", new ProfileModel { firstName = "", picture = ""});
         }
     }
 }

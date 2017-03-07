@@ -8,7 +8,7 @@ namespace voteStuff.Models
 {
     public class ProfileModel
     {
-        public string name { get; set; }
+        public string firstName { get; set; }
         public string picture { get; set; }
     }
 }

@@ -17,11 +17,17 @@ namespace voteStuff.Controllers
     {
         private SignInManager<ApplicationUser> _signInManager;
         private UserManager<ApplicationUser> _userManager;
+        private VoteDbContext _context;
 
-        public AccountController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager)
+        public AccountController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            VoteDbContext context
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpGet]
@@ -76,10 +82,21 @@ namespace voteStuff.Controllers
                 ViewData["LoginProvider"] = info.LoginProvider;
 
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                var userName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
+                var firstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
+                var lastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
                 var indentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userName = string.Concat(indentifier, lastName, firstName);
+
                 
-                var user = new ApplicationUser { UserName = userName, Email = email, FbUserId = indentifier};
+                var user = new ApplicationUser
+                {
+                    UserName = userName,
+                    Email = email,
+                    FbUserId = indentifier,
+                    FirstName = firstName,
+                    LastName = lastName
+                };
+
                 var extUserCreatResult = await _userManager.CreateAsync(user);
 
                 if (extUserCreatResult.Succeeded)

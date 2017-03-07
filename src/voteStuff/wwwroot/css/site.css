@@ -69,6 +69,7 @@ form#logOutForm a:hover {
 #mobile-demo li #profile-pic-id{
     padding: 0;
     display: inline;
+    border-color: transparent;
 }
 
 #mobile-demo li a span {
