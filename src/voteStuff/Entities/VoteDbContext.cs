@@ -18,6 +18,7 @@ namespace voteStuff.Entities
         }
 
         public DbSet<VoteDuo> VotesDb { get; set; }
-
+        public DbSet<UserVotingDb> UserVotingDbs { get; set; }
+        public DbSet<DuoVotedByUserDb> DuoVotedByUserDbs { get; set; }
     }
 }
