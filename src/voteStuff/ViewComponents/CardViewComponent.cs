@@ -27,12 +27,16 @@ namespace voteStuff.ViewComponents
         {
             ApplicationUser currentLogedInUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            if (votedName != null)
+            if (votedName != null || votedName != String.Empty)
             {
                 var model = await _votingService.VoteCast(id, votedName, currentLogedInUser);
                 return View(model);
             }
-            return View();
+            else
+            {
+                var model = await _votingService.GetDuo(id, currentLogedInUser);
+                return View(model);
+            }
         }
     }
 }

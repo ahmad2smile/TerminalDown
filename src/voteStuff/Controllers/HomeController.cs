@@ -14,12 +14,10 @@ namespace voteStuff.Controllers
     public class HomeController: Controller
     {
         private IVotingService _votingService;
-        private UserManager<ApplicationUser> _userManager;
 
-        public HomeController(IVotingService votingService, UserManager<ApplicationUser> userManager)
+        public HomeController(IVotingService votingService)
         {
             _votingService = votingService;
-            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -40,15 +38,14 @@ namespace voteStuff.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Duos()
+        public IActionResult Duos()
         {
-            var currentLogedInUser = await _userManager.GetUserAsync(HttpContext.User);
             int id = 1;
-            VoteDuoViewModel model = await _votingService.GetDuo(id, currentLogedInUser);
-            return View(model);
+            return View(id);
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Duos(CastedVote postedModel)
         {
             if (ModelState.IsValid)

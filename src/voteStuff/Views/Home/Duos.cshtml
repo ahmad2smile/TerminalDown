@@ -1,8 +1,7 @@
 ﻿
-@model voteStuff.ViewModels.VoteDuoViewModel
+@model int
 
 @{
-    ViewBag.Title = $"Duo {@Model.DuoFirst} vs {@Model.DuoSecond}";
     Layout = "_Layout";
 }
 
@@ -10,7 +9,7 @@
     <div class="row">
         <div class="col center-align l12 m12 s12">
             <div id="DuoFormsCon">
-                @await Component.InvokeAsync("Card", new { Id = @Model.Id })
+                @await Component.InvokeAsync("Card", new { Id = @Model })
 
             </div>
         </div>
