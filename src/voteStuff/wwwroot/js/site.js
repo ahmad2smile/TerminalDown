@@ -90,4 +90,11 @@
             $("#logOutForm").submit();
         });
 
+//    tooltip enableling
+
+    $(document).ready(function () {
+        $('.tooltipped').tooltip({ delay: 50 });
+    });
+
+//    tooltip enabling end
 });
