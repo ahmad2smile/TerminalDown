@@ -29,7 +29,7 @@ namespace voteStuff.ViewComponents
 
             if (votedName != null)
             {
-                var model =await _votingService.VoteCast(id, votedName, currentLogedInUser);
+                var model = await _votingService.VoteCast(id, votedName, currentLogedInUser);
                 return View(model);
             }
             return View();

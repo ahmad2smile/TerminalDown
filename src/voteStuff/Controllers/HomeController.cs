@@ -5,16 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 using voteStuff.Models;
 using voteStuff.Services;
 using voteStuff.ViewModels;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using voteStuff.Entities;
 
 namespace voteStuff.Controllers
 {
     public class HomeController: Controller
     {
         private IVotingService _votingService;
+        private UserManager<ApplicationUser> _userManager;
 
-        public HomeController(IVotingService votingService)
+        public HomeController(IVotingService votingService, UserManager<ApplicationUser> userManager)
         {
             _votingService = votingService;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -35,10 +40,11 @@ namespace voteStuff.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Duos()
+        public async Task<IActionResult> Duos()
         {
+            var currentLogedInUser = await _userManager.GetUserAsync(HttpContext.User);
             int id = 1;
-            VoteDuo model = _votingService.GetDuo(id);
+            VoteDuoViewModel model = await _votingService.GetDuo(id, currentLogedInUser);
             return View(model);
         }
 

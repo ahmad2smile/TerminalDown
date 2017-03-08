@@ -4,13 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using voteStuff.Entities;
 using voteStuff.Models;
 using System.Threading.Tasks;
+using voteStuff.ViewModels;
 
 namespace voteStuff.Services
 {
     public interface IVotingService
     {
-        VoteDuo GetDuo(int id);
-        Task<VoteDuo> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser);
+        Task<VoteDuoViewModel> GetDuo(int id, ApplicationUser currentLogedInUser);
+        Task<DuoVotedByUserDb> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser);
+        Task<VoteDuoViewModel> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser);
     }
 
     public class VotingService: IVotingService
@@ -22,43 +24,123 @@ namespace voteStuff.Services
             _context = context;
         }
 
-        public VoteDuo GetDuo(int id)
+        public async Task<DuoVotedByUserDb> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser)
         {
-            return _context.VotesDb.FirstOrDefault(r => r.Id == id);
+            var userVotingData =
+                await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == currentLogedInUser.Id);
+            var _didUserVotedThisDuo = new DuoVotedByUserDb();
+            if (userVotingData != null)
+            {
+                _didUserVotedThisDuo =await _context.DuoVotedByUserDbs.FirstOrDefaultAsync(r => r.DuoID == id && r.UserVotingDbID == userVotingData.ID);
+            }
+
+            if (_didUserVotedThisDuo != null) return _didUserVotedThisDuo;
+            else return default(DuoVotedByUserDb);
         }
 
-        public async Task<VoteDuo> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser)
+
+        public async Task<VoteDuoViewModel> GetDuo(int id, ApplicationUser currentLogedInUser)
         {
-            VoteDuo castedDuo = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
+            var _duoVotedByUser_Data = await this.didUserVotedThisDuo(id, currentLogedInUser);
+
+            var VoteDuoData = await  _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
+
+            if (_duoVotedByUser_Data == null)
+            {
+                var model = new VoteDuoViewModel
+                {
+                    Id = VoteDuoData.Id,
+                    DuoFirst = VoteDuoData.DuoFirst,
+                    DuoFirstVotes = VoteDuoData.DuoFirstVotes,
+                    DuoSecond = VoteDuoData.DuoSecond,
+                    DuoSecondVotes = VoteDuoData.DuoSecondVotes,
+                    DuoTotalVotes = VoteDuoData.DuoTotalVotes
+                };
+
+                return model;
+            }
+            else
+            {
+
+                var model = new VoteDuoViewModel
+                {
+                    Id = VoteDuoData.Id,
+                    DuoFirst = VoteDuoData.DuoFirst,
+                    DuoFirstVotes = VoteDuoData.DuoFirstVotes,
+                    DuoSecond = VoteDuoData.DuoSecond,
+                    DuoSecondVotes = VoteDuoData.DuoSecondVotes,
+                    DuoTotalVotes = VoteDuoData.DuoTotalVotes,
+                    duoVotedByUser_Data = _duoVotedByUser_Data
+                };
+
+                return model;
+            }
+        }
+
+        public async Task<VoteDuoViewModel> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser)
+        {
+            var VoteDuoData = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
+
             UserVotingDb userVotingData =
                 await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == currentLogedInUser.Id);
 
-            if (castedDuo != null)
+            var _duoVotedByUser_Data = await this.didUserVotedThisDuo(id, currentLogedInUser);
+
+            var model = new VoteDuoViewModel();
+
+            if (VoteDuoData != null)
             {
-                userVotingData.TotallCastedVotes += 1;
-                userVotingData.TotallVotingRights -= 1;
-
-                castedDuo.DuoTotalVotes = castedDuo.DuoFirstVotes + castedDuo.DuoSecondVotes + 1;
-
-                if (votedDuoName == castedDuo.DuoFirst)
+                if (_duoVotedByUser_Data == null)
                 {
-                    castedDuo.DuoFirstVotes += 1;
+                    userVotingData.TotallCastedVotes += 1;
+                    userVotingData.TotallVotingRights -= 1;
+
+                    VoteDuoData.DuoTotalVotes = VoteDuoData.DuoFirstVotes + VoteDuoData.DuoSecondVotes + 1;
+
+                    if (votedDuoName == VoteDuoData.DuoFirst)
+                    {
+                        VoteDuoData.DuoFirstVotes += 1;
+                    }
+                    else if (votedDuoName == VoteDuoData.DuoSecond)
+                    {
+                        VoteDuoData.DuoSecondVotes += 1;
+                    }
+
+                    await _context.DuoVotedByUserDbs.AddAsync(new DuoVotedByUserDb
+                    {
+                        DuoID = id,
+                        UserVotingDbID = userVotingData.ID,
+                        VotingTime = DateTime.UtcNow
+                    });
+
+                    await _context.SaveChangesAsync();
+
+                    model = new VoteDuoViewModel
+                    {
+                        Id = VoteDuoData.Id,
+                        DuoFirst = VoteDuoData.DuoFirst,
+                        DuoFirstVotes = VoteDuoData.DuoFirstVotes,
+                        DuoSecond = VoteDuoData.DuoSecond,
+                        DuoSecondVotes = VoteDuoData.DuoSecondVotes,
+                        DuoTotalVotes = VoteDuoData.DuoTotalVotes
+                    };
+
+                    return model;
                 }
-                else if (votedDuoName == castedDuo.DuoSecond)
-                {
-                    castedDuo.DuoSecondVotes += 1;
-                }
-                await _context.DuoVotedByUserDbs.AddAsync(new DuoVotedByUserDb
-                {
-                    DuoID = id,
-                    UserVotingDbID = userVotingData.ID,
-                    VotingTime = DateTime.UtcNow
-                });
-
-                await _context.SaveChangesAsync();
             }
 
-            return castedDuo;
+            model = new VoteDuoViewModel
+            {
+                Id = VoteDuoData.Id,
+                DuoFirst = VoteDuoData.DuoFirst,
+                DuoFirstVotes = VoteDuoData.DuoFirstVotes,
+                DuoSecond = VoteDuoData.DuoSecond,
+                DuoSecondVotes = VoteDuoData.DuoSecondVotes,
+                DuoTotalVotes = VoteDuoData.DuoTotalVotes,
+                duoVotedByUser_Data = _duoVotedByUser_Data
+            };
+
+            return model;
         }
     }
 }
