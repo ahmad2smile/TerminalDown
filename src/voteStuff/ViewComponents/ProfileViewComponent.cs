@@ -1,12 +1,9 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using voteStuff.Entities;
 using voteStuff.Models;
-using voteStuff.Services;
 
 namespace voteStuff.ViewComponents
 {

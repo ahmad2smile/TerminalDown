@@ -1,24 +1,11 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using voteStuff.Models;
-using voteStuff.Services;
 using voteStuff.ViewModels;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using voteStuff.Entities;
 
 namespace voteStuff.Controllers
 {
     public class HomeController: Controller
     {
-        private IVotingService _votingService;
-
-        public HomeController(IVotingService votingService)
-        {
-            _votingService = votingService;
-        }
 
         public IActionResult Index()
         {

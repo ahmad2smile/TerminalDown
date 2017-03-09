@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using voteStuff.Entities;
 using voteStuff.Models;
@@ -15,7 +14,7 @@ namespace voteStuff.Services
         Task<VoteDuoViewModel> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser);
     }
 
-    public class VotingService: IVotingService
+    public class VotingService : IVotingService
     {
         private VoteDbContext _context;
 
@@ -31,19 +30,18 @@ namespace voteStuff.Services
             var _didUserVotedThisDuo = new DuoVotedByUserDb();
             if (userVotingData != null)
             {
-                _didUserVotedThisDuo =await _context.DuoVotedByUserDbs.FirstOrDefaultAsync(r => r.DuoID == id && r.UserVotingDbID == userVotingData.ID);
+                _didUserVotedThisDuo = await _context.DuoVotedByUserDbs.FirstOrDefaultAsync(r => r.DuoID == id && r.UserVotingDbID == userVotingData.ID);
             }
 
-            if (_didUserVotedThisDuo != null) return _didUserVotedThisDuo;
-            else return default(DuoVotedByUserDb);
+            return _didUserVotedThisDuo;
         }
 
 
         public async Task<VoteDuoViewModel> GetDuo(int id, ApplicationUser currentLogedInUser)
         {
-            var _duoVotedByUser_Data = await this.didUserVotedThisDuo(id, currentLogedInUser);
+            var _duoVotedByUser_Data = await didUserVotedThisDuo(id, currentLogedInUser);
 
-            var VoteDuoData = await  _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
+            var VoteDuoData = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
 
             if (_duoVotedByUser_Data == null)
             {
@@ -81,10 +79,10 @@ namespace voteStuff.Services
         {
             var VoteDuoData = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
 
-            UserVotingDb userVotingData =
+            var userVotingData =
                 await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == currentLogedInUser.Id);
 
-            var _duoVotedByUser_Data = await this.didUserVotedThisDuo(id, currentLogedInUser);
+            var _duoVotedByUser_Data = await didUserVotedThisDuo(id, currentLogedInUser);
 
             var model = new VoteDuoViewModel();
 
@@ -127,19 +125,17 @@ namespace voteStuff.Services
 
                     return model;
                 }
+                model = new VoteDuoViewModel
+                {
+                    Id = VoteDuoData.Id,
+                    DuoFirst = VoteDuoData.DuoFirst,
+                    DuoFirstVotes = VoteDuoData.DuoFirstVotes,
+                    DuoSecond = VoteDuoData.DuoSecond,
+                    DuoSecondVotes = VoteDuoData.DuoSecondVotes,
+                    DuoTotalVotes = VoteDuoData.DuoTotalVotes,
+                    duoVotedByUser_Data = _duoVotedByUser_Data
+                };
             }
-
-            model = new VoteDuoViewModel
-            {
-                Id = VoteDuoData.Id,
-                DuoFirst = VoteDuoData.DuoFirst,
-                DuoFirstVotes = VoteDuoData.DuoFirstVotes,
-                DuoSecond = VoteDuoData.DuoSecond,
-                DuoSecondVotes = VoteDuoData.DuoSecondVotes,
-                DuoTotalVotes = VoteDuoData.DuoTotalVotes,
-                duoVotedByUser_Data = _duoVotedByUser_Data
-            };
-
             return model;
         }
     }

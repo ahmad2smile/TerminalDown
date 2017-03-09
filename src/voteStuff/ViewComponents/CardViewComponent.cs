@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using voteStuff.Entities;
-using voteStuff.Models;
 using voteStuff.Services;
 
 namespace voteStuff.ViewComponents
 {
     public class CardViewComponent: ViewComponent
     {
-        private UserManager<ApplicationUser> _userManager;
-        private IVotingService _votingService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IVotingService _votingService;
 
 
         public CardViewComponent(IVotingService votingService, UserManager<ApplicationUser> userManager)
@@ -27,7 +22,7 @@ namespace voteStuff.ViewComponents
         {
             ApplicationUser currentLogedInUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            if (votedName != null || votedName != String.Empty)
+            if (!string.IsNullOrEmpty(votedName))
             {
                 var model = await _votingService.VoteCast(id, votedName, currentLogedInUser);
                 return View(model);

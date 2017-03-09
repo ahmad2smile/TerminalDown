@@ -1,7 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using voteStuff.Entities
-
-@inject SignInManager<ApplicationUser> _SingInManager
+﻿@inject SignInManager<ApplicationUser> _SingInManager
 @inject UserManager<ApplicationUser> _UserManager
 
 @if (_SingInManager.IsSignedIn(User))

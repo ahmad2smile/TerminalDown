@@ -46,25 +46,6 @@
 
     duoGraph();
 
-    function xhrVoteSubmit(submitedForm) {
-        //    let xhrReq = new XMLHttpRequest();
-        //    let duoFormsCon = document.getElementById("DuoFormsCon");
-        //    let firstFormId = document.getElementById("FirstFormId");
-        //    let secondFormId = document.getElementById("SecondFormId");
-        //
-        //    xhrReq.open("POST", submitedForm.action, true);
-        //    xhrReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        //
-        //    let formData = new FormData(submitedForm);
-        //
-        //    xhrReq.send(formData);
-        //    console.log(formData);
-        //    xhrReq.onreadystatechange = function() {
-        //        duoFormsCon.innerHTML = xhrReq.responseText;
-        //    };
-        return false;
-    }
-
     $('body').on("click", ".formClass", function (e) {
 
         e.preventDefault();
