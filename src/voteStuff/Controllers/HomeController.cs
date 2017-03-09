@@ -42,5 +42,12 @@ namespace voteStuff.Controllers
 
             return ViewComponent("Card");
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult ProfileComponentUpdate()
+        {
+            return ViewComponent("Profile");
+        }
     }
 }

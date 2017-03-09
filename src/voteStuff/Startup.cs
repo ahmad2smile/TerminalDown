@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using voteStuff.Entities;
 using voteStuff.Services;
 
@@ -40,6 +41,20 @@ namespace voteStuff
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<VoteDbContext>()
                 .AddDefaultTokenProviders();
+
+            var settings = new JsonSerializerSettings();
+            settings.ContractResolver = new SignalRContractResolver();
+
+            var serializer = JsonSerializer.Create(settings);
+
+            services.Add(new ServiceDescriptor(typeof(JsonSerializer),
+                         provider => serializer,
+                         ServiceLifetime.Transient));
+
+            services.AddSignalR(options =>
+            {
+                options.Hubs.EnableDetailedErrors = true;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -60,12 +75,8 @@ namespace voteStuff
                 Fields = { "picture" },
                 SaveTokens = true
             });
-            app.UseMvc(RouterConfiguration);
-        }
-
-        private void RouterConfiguration(IRouteBuilder obj)
-        {
-            obj.MapRoute("Default", "{Controller=Home}/{action=Index}/{Id?}");
+            app.UseMvc(obj => obj.MapRoute("Default", "{Controller=Home}/{action=Index}/{Id?}"));
+            app.UseSignalR();
         }
     }
 }

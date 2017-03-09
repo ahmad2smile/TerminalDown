@@ -24,7 +24,7 @@
                     <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="fa fa-bars fa-2x"></i></a>
                     <ul class="hide-on-med-and-down right">
                         <li id="profile-navbar-id">@await Component.InvokeAsync("Profile")</li>
-                        <li><a class="dropdown-button" href="javascript:return void;" data-activates="dropdown1"><i class="fa fa-caret-down"></i></a></li>
+                        <li><a class="dropdown-button" href="javascript:return 0;" data-activates="dropdown1"><i class="fa fa-caret-down"></i></a></li>
                     </ul>
                     <ul class="side-nav" id="mobile-demo">
                         <li>
@@ -59,7 +59,7 @@
     <script src="~/js/jquery.validate.unobtrusive.js"></script>
     <script src="~/js/d3.js"></script>
     <script src="~/js/materialize.min.js"></script>
-
+    <script src="/signalr/hubs"></script>
     <script src="~/js/site.js"></script>
 </body>
 </html>
