@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using voteStuff.Entities;
 using voteStuff.Hubs;
+using voteStuff.Models;
 using voteStuff.Services;
 
 namespace voteStuff.ViewComponents
@@ -33,7 +34,13 @@ namespace voteStuff.ViewComponents
             if (!string.IsNullOrEmpty(votedName))
             {
                 var model = await _votingService.VoteCast(id, votedName, currentLogedInUser);
-//                _connectionManager.GetHubContext<VotingHub>().Clients.All.UpdateVotedDuo(model);
+                var broadcast_model = new DuoBroadcastModel
+                {
+                    DuoFirstVotes = model.DuoFirstVotes,
+                    DuoSecondVotes = model.DuoSecondVotes,
+                    DuoTotalVotes = model.DuoTotalVotes
+                };
+                _connectionManager.GetHubContext<VotingHub>().Clients.All.UpdateVotedDuo(broadcast_model);
                 
                 return View(model);
             }
