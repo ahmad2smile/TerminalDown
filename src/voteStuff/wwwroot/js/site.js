@@ -65,7 +65,7 @@
     }
 
     function profileComponentUpdate(data) {
-        $("#profile-navbar-id").html(data);
+        $(".profile-component").parent().html(data);
     }
 
 

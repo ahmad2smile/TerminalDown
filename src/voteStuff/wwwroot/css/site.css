@@ -74,6 +74,10 @@ form#logOutForm a:hover {
     text-align: center;
 }
 
+#mobile-demo .userView {
+    background: transparent url("/img/office.jpg")
+}
+
 #mobile-demo li #profile-pic-id{
     padding: 0;
     display: inline;
