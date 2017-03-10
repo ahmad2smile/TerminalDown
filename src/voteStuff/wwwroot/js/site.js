@@ -60,6 +60,7 @@
     function updateDuo(data) {
         if (data) {
             $("#DuoFormsCon").html(data);
+            console.log(data);
         }
         duoGraph();
     }

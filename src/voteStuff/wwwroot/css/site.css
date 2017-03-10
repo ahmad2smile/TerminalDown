@@ -124,6 +124,10 @@ form#logOutForm a:hover {
 
 /*duo card desing*/ 
 
+.contentCard .row {
+    margin-bottom: 0;
+}
+
 .bottomCard, .interCard, .contentCard{
     background-color: #FFF;
     color: #222;

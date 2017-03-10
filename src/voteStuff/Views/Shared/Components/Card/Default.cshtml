@@ -1,4 +1,5 @@
-﻿@model voteStuff.ViewModels.VoteDuoViewModel
+﻿@using Humanizer
+@model voteStuff.ViewModels.VoteDuoViewModel
 
 @{
     ViewBag.Title = $"Duo {@Model.DuoFirst} vs {@Model.DuoSecond}";
@@ -23,7 +24,10 @@
                         <div>@Model.DuoFirst <span id="DuoFirstVotes">@Model.DuoFirstVotes</span></div>
                         <input type="hidden" value="@Model.DuoSecond" name="VotedName" />
                         <input type="hidden" value="@Model.Id" name="Id" />
-                        <input id="DuoFirstSubmit" type="submit" value="&#xf088;" class="fa inputIcon inputLeft siteColor" />
+                        @if (!Model.DuoIsAlreadyVotedByUser)
+                        {
+                            <input id="DuoFirstSubmit" type="submit" value="&#xf088;" class="fa inputIcon inputLeft siteColor" />
+                        }
                     </form>
                 </div>
                 <div class="col l6 m6 s6 left-align">
@@ -31,9 +35,24 @@
                         <div>@Model.DuoSecond <span id="DuoSecondVotes">@Model.DuoSecondVotes</span></div>
                         <input type="hidden" value="@Model.DuoFirst" name="VotedName" />
                         <input type="hidden" value="@Model.Id" name="Id" />
-                        <input id="DuoSecondSubmit" type="submit" value="&#xf088;" class="fa inputIcon siteColor" />
+                        @if (!Model.DuoIsAlreadyVotedByUser)
+                        {
+                            <input id="DuoSecondSubmit" type="submit" value="&#xf088;" class="fa inputIcon siteColor" />
+                        }
                     </form>
                 </div>
+                @if (Model.DuoIsAlreadyVotedByUser)
+                {
+                    <div class="row">
+                        <div class="col l10 offset-l1 m10 offset-m1 s10 offset-s1 center-align">
+                            <div class="card-panel">
+                                <div>
+                                    Voted <span class="votedDuoTime">@Model.DuoVotedByCurrentUserDb.VotingTime.Humanize()</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>

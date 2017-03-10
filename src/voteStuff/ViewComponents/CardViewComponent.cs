@@ -33,7 +33,7 @@ namespace voteStuff.ViewComponents
             if (!string.IsNullOrEmpty(votedName))
             {
                 var model = await _votingService.VoteCast(id, votedName, currentLogedInUser);
-                _connectionManager.GetHubContext<VotingHub>().Clients.All.UpdateVotedDuo(model);
+//                _connectionManager.GetHubContext<VotingHub>().Clients.All.UpdateVotedDuo(model);
                 
                 return View(model);
             }

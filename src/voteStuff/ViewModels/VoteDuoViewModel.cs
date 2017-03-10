@@ -10,6 +10,9 @@ namespace voteStuff.ViewModels
         public int DuoFirstVotes { get; set; }
         public int DuoSecondVotes { get; set; }
         public int DuoTotalVotes { get; set; }
+        public bool DuoIsAlreadyVotedByUser { get; set; }
+
+        public DuoVotedByUserDb DuoVotedByCurrentUserDb { get; set; }
 
     }
 }
