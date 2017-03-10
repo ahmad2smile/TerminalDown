@@ -8,9 +8,15 @@ body{
     background: linear-gradient(200deg, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.8) 100%);
     min-height: 100vh;
     color: #222;
-    font-family: Roboto Light;
+    font-family: 'Roboto Light',"Roboto Regular","sans-serif","Roboto";
 }
 
+@font-face {
+    font-family: 'Roboto Light';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Light'), url('https://fonts.googleapis.com/css?family=Roboto');
+}
 .siteColor{
     background-color: #1de9b6;
     color: #222;
@@ -24,8 +30,8 @@ nav, .brand-logo .fa-terminal, .SiteName{
     color: #222222 !important;
 }
 
-#profile-pic-id {
-    padding-right: 10px;
+#profile-navbar-id a img{
+    margin-right: 10px;
 }
 
 /*badges start*/
@@ -75,7 +81,7 @@ form#logOutForm a:hover {
 }
 
 #mobile-demo .userView {
-    background: transparent url("/img/office.jpg")
+    background: transparent url("/img/office.jpg");
 }
 
 #mobile-demo li #profile-pic-id{
@@ -93,6 +99,7 @@ form#logOutForm a:hover {
 }
 
 #mobile-demo li form a:hover {
+    background-color: #555555;
     background-color: rgba(85, 85, 85,0.1);
 }
 

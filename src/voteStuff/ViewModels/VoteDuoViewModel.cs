@@ -11,6 +11,5 @@ namespace voteStuff.ViewModels
         public int DuoSecondVotes { get; set; }
         public int DuoTotalVotes { get; set; }
 
-        public DuoVotedByUserDb duoVotedByUser_Data { get; set; }
     }
 }

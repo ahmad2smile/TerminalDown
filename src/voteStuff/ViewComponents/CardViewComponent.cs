@@ -12,7 +12,7 @@ namespace voteStuff.ViewComponents
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IVotingService _votingService;
-        private IConnectionManager _connectionManager;
+        private readonly IConnectionManager _connectionManager;
 
 
         public CardViewComponent(
@@ -34,6 +34,7 @@ namespace voteStuff.ViewComponents
             {
                 var model = await _votingService.VoteCast(id, votedName, currentLogedInUser);
                 _connectionManager.GetHubContext<VotingHub>().Clients.All.UpdateVotedDuo(model);
+                
                 return View(model);
             }
             else

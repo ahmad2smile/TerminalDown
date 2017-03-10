@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using voteStuff.Entities;
 using voteStuff.Models;
@@ -10,28 +11,26 @@ namespace voteStuff.Services
     public interface IVotingService
     {
         Task<VoteDuoViewModel> GetDuo(int id, ApplicationUser currentLogedInUser);
-        Task<DuoVotedByUserDb> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser);
+        Task<bool> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser);
         Task<VoteDuoViewModel> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser);
     }
 
     public class VotingService : IVotingService
     {
-        private VoteDbContext _context;
+        private readonly VoteDbContext _context;
 
         public VotingService(VoteDbContext context)
         {
             _context = context;
         }
 
-        public async Task<DuoVotedByUserDb> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser)
+        public async Task<bool> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser)
         {
             var userVotingData =
                 await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == currentLogedInUser.Id);
-            var _didUserVotedThisDuo = new DuoVotedByUserDb();
+            bool _didUserVotedThisDuo = false;
             if (userVotingData != null)
-            {
-                _didUserVotedThisDuo = await _context.DuoVotedByUserDbs.FirstOrDefaultAsync(r => r.DuoID == id && r.UserVotingDbID == userVotingData.ID);
-            }
+                _didUserVotedThisDuo = _context.DuoVotedByUserDbs.Any(r => r.DuoID == id && r.UserVotingDbID == userVotingData.ID);
 
             return _didUserVotedThisDuo;
         }
@@ -39,12 +38,7 @@ namespace voteStuff.Services
 
         public async Task<VoteDuoViewModel> GetDuo(int id, ApplicationUser currentLogedInUser)
         {
-            var _duoVotedByUser_Data = await didUserVotedThisDuo(id, currentLogedInUser);
-
             var VoteDuoData = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
-
-            if (_duoVotedByUser_Data == null)
-            {
                 var model = new VoteDuoViewModel
                 {
                     Id = VoteDuoData.Id,
@@ -56,23 +50,6 @@ namespace voteStuff.Services
                 };
 
                 return model;
-            }
-            else
-            {
-
-                var model = new VoteDuoViewModel
-                {
-                    Id = VoteDuoData.Id,
-                    DuoFirst = VoteDuoData.DuoFirst,
-                    DuoFirstVotes = VoteDuoData.DuoFirstVotes,
-                    DuoSecond = VoteDuoData.DuoSecond,
-                    DuoSecondVotes = VoteDuoData.DuoSecondVotes,
-                    DuoTotalVotes = VoteDuoData.DuoTotalVotes,
-                    duoVotedByUser_Data = _duoVotedByUser_Data
-                };
-
-                return model;
-            }
         }
 
         public async Task<VoteDuoViewModel> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser)
@@ -88,7 +65,7 @@ namespace voteStuff.Services
 
             if (VoteDuoData != null)
             {
-                if (_duoVotedByUser_Data == null)
+                if (!_duoVotedByUser_Data)
                 {
                     userVotingData.TotallCastedVotes += 1;
                     userVotingData.TotallVotingRights -= 1;
@@ -132,8 +109,7 @@ namespace voteStuff.Services
                     DuoFirstVotes = VoteDuoData.DuoFirstVotes,
                     DuoSecond = VoteDuoData.DuoSecond,
                     DuoSecondVotes = VoteDuoData.DuoSecondVotes,
-                    DuoTotalVotes = VoteDuoData.DuoTotalVotes,
-                    duoVotedByUser_Data = _duoVotedByUser_Data
+                    DuoTotalVotes = VoteDuoData.DuoTotalVotes
                 };
             }
             return model;
