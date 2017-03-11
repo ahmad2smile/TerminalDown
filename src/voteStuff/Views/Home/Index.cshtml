@@ -1,6 +1,4 @@
-﻿
-
-@{
+﻿@{
     ViewBag.Title = "Terminal Down";
 }
 
@@ -10,9 +8,19 @@
             <div class="bottomCard center-align z-depth-5">
                 <div class="interCard center-align">
                     <div class="contentCard center-align">
-                        <div class="aboutContainer">
+                        <div class="homeCategoriesCardContainer">
                             <h4>All the Duos</h4>
-                            <a asp-controller="Home" asp-action="Duos" class="chip">Duos</a>
+                            <a href="~/Home/Duos/?previousDuoId=0&category=-1" class="chip">Duos</a>
+                            <div class="chipsContainer">
+                                @{
+                                    int i = 0;
+                                    foreach (var category in Enum.GetValues(typeof(DuoCategoriesEnum)))
+                                    {
+                                        <a href="~/Home/Duos/?previousDuoId=0&category=@i" class="chip">@Enum.GetName(typeof(DuoCategoriesEnum), category)</a>
+                                        i++;
+                                    }
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>

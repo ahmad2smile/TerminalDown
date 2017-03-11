@@ -8,9 +8,10 @@ using voteStuff.Entities;
 namespace voteStuff.Migrations
 {
     [DbContext(typeof(VoteDbContext))]
-    partial class VoteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170311100300_DuoCategories-init")]
+    partial class DuoCategoriesinit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")

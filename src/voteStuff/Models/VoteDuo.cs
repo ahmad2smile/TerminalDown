@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace voteStuff.Models
+﻿namespace voteStuff.Models
 {
+
     public class VoteDuo
     {
         public int Id { get; set; }
@@ -14,6 +9,8 @@ namespace voteStuff.Models
         public int DuoFirstVotes { get; set; }
         public int DuoSecondVotes { get; set; }
         public int DuoTotalVotes { get; set; }
+
+        public DuoCategoriesEnum Category { get; set; }
 
     }
 }

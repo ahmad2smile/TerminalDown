@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using voteStuff.Entities;
@@ -35,6 +34,8 @@ namespace voteStuff
         {
             services.AddMvc();
             services.AddScoped<IVotingService, VotingService>();
+            services.AddScoped<INextDuoService, NextDuoService>();
+
             services.AddDbContext<VoteDbContext>(
                 options => options.UseSqlServer(
                     Configuration.GetConnectionString("VotesDbCon")));
