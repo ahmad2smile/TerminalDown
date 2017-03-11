@@ -19,10 +19,12 @@ namespace voteStuff.Services
     {
         private readonly VoteDbContext _context;
         public DuoVotedByUserDb _duoVotedByCurrentUser;
+        private INextDuoService _nextDuoService;
 
-        public VotingService(VoteDbContext context)
+        public VotingService(VoteDbContext context, INextDuoService nextDuoService)
         {
             _context = context;
+            _nextDuoService = nextDuoService;
         }
 
         public async Task<bool> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser)
@@ -49,8 +51,9 @@ namespace voteStuff.Services
 
         public async Task<VoteDuoViewModel> GetDuo(int id, ApplicationUser currentLogedInUser)
         {
-            var VoteDuoData = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id);
-            bool duoIsAlreadyVotedByUser = await didUserVotedThisDuo(id, currentLogedInUser);
+            var VoteDuoData = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == id) ??
+                              await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == _nextDuoService.DefaultDuoId);
+            bool duoIsAlreadyVotedByUser = await didUserVotedThisDuo(VoteDuoData.Id, currentLogedInUser);
 
             var model = new VoteDuoViewModel
             {
@@ -73,7 +76,7 @@ namespace voteStuff.Services
                     DuoSecond = VoteDuoData.DuoSecond,
                     DuoSecondVotes = VoteDuoData.DuoSecondVotes,
                     DuoTotalVotes = VoteDuoData.DuoTotalVotes,
-                    DuoIsAlreadyVotedByUser = duoIsAlreadyVotedByUser,
+                    DuoIsAlreadyVotedByUser = true,
                     DuoVotedByCurrentUserDb = _duoVotedByCurrentUser
                 };
                 return model;
@@ -142,7 +145,7 @@ namespace voteStuff.Services
                     DuoSecond = VoteDuoData.DuoSecond,
                     DuoSecondVotes = VoteDuoData.DuoSecondVotes,
                     DuoTotalVotes = VoteDuoData.DuoTotalVotes,
-                    DuoIsAlreadyVotedByUser = duoIsAlreadyVotedByUser,
+                    DuoIsAlreadyVotedByUser = true,
                     DuoVotedByCurrentUserDb = _duoVotedByCurrentUser
                 };
             }

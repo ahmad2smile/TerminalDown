@@ -9,7 +9,6 @@
 <div class="bottomCard center-align z-depth-5">
     <div class="interCard center-align">
         <div class="contentCard center-align">
-
             <div class="row">
                 <h4 id="DuoNameHead">@Model.DuoFirst vs @Model.DuoSecond</h4>
 
@@ -19,10 +18,10 @@
                 <div class="DuoNavigationContainer">
                     <div class="navigation-content">
                         <div class="prev">
-                            <a class="tooltipped" data-position="left" data-delay="50" data-tooltip="Previous Duo" href="javascript:void(0)"><i class="fa fa-angle-left"></i></a>
+                            <a class="tooltipped" data-position="left" data-delay="50" data-tooltip="Previous Duo" href="~/Home/Duos/?previousDuoId=@Model.Id&category=@ViewBag.Category&nextOrPrev=-1"><i class="fa fa-angle-left"></i></a>
                         </div>
                         <div class="next">
-                            <a class="tooltipped" data-position="right" data-delay="50" data-tooltip="Next Duo" href="javascript:void(0)"><i class="fa fa-angle-right"></i></a>
+                            <a class="tooltipped" data-position="right" data-delay="50" data-tooltip="Next Duo" href="~/Home/Duos/?previousDuoId=@Model.Id&category=@ViewBag.Category&nextOrPrev=1"><i class="fa fa-angle-right"></i></a>
                         </div>
                     </div>
                 </div>

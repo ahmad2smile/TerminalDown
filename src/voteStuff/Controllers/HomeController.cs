@@ -47,6 +47,10 @@ namespace voteStuff.Controllers
             //calling Next or Prev Duo from Duo page with Categories 0 1 2 3 & id > 0
             if (previousDuoId > 0 && category > -1) nextDuoId = await _nextDuoService.GetNextDuoOfCategory(previousDuoId, category, nextOrPrev);
 
+            //When category is out of Dous and Id shift to 1 set Category to -1 so All Duos category is activated
+            ViewBag.Category = category;
+            if (_nextDuoService.ChangedCategory) ViewBag.Category = -1;
+
             return View(nextDuoId);
         }
 

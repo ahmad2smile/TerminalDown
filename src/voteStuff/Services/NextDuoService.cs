@@ -10,12 +10,16 @@ namespace voteStuff.Services
         int GetNextDuoAll(int previousDuoId,int nextOrPrev);
         Task<int> GetDuoOfCategory(int Category);
         Task<int> GetNextDuoOfCategory(int previousDuoId, int Category, int nextOrPrev);
+
+        bool ChangedCategory { get; set; }
+        int DefaultDuoId { get; }
     }
 
     public class NextDuoService : INextDuoService
     {
         private readonly VoteDbContext _context;
-        private const int _defaultDuoId = 1;
+        public int DefaultDuoId { get; } = 1;
+        public bool ChangedCategory { get; set; }
 
         public NextDuoService(VoteDbContext context)
         {
@@ -31,7 +35,7 @@ namespace voteStuff.Services
         public async Task<int> GetDuoOfCategory(int Category)
         {
             var nextCategoryDuo = await _context.VotesDb.FirstOrDefaultAsync(r => (int)r.Category == Category);
-            if (nextCategoryDuo == null) return _defaultDuoId;
+            if (nextCategoryDuo == null) return DefaultDuoId;
                 
             return nextCategoryDuo.Id;
         }
@@ -42,7 +46,7 @@ namespace voteStuff.Services
             if (nextOrPrev == 1)
             {
                 nextCategoryDuo = await _context.VotesDb.FirstOrDefaultAsync(
-                    r => (int) r.Category == Category && r.Id > previousDuoId
+                    r => (int)r.Category == Category && r.Id > previousDuoId
                 );
             }
             else if (nextOrPrev == -1)
@@ -52,7 +56,9 @@ namespace voteStuff.Services
                 );
             }
 
-            return nextCategoryDuo?.Id ?? _defaultDuoId;
+            if (nextCategoryDuo == null) ChangedCategory = true;
+
+            return nextCategoryDuo?.Id ?? DefaultDuoId;
         }
     }
 }
