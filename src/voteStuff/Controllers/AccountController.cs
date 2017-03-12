@@ -2,17 +2,19 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using voteStuff.Entities;
 using voteStuff.Models;
+using voteStuff.ViewModels;
 
 namespace voteStuff.Controllers
 {
     public class AccountController: Controller
     {
-        private SignInManager<ApplicationUser> _signInManager;
-        private UserManager<ApplicationUser> _userManager;
-        private VoteDbContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly VoteDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -95,7 +97,7 @@ namespace voteStuff.Controllers
                 var extUserCreatResult = await _userManager.CreateAsync(user);
 
                 //Gifted Votes at time of Registration
-                int numberOfGiftedVotes = 5;
+                const int numberOfGiftedVotes = 5;
 
                 if (extUserCreatResult.Succeeded)
                 {
@@ -121,6 +123,18 @@ namespace voteStuff.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ProfileOverview()
+        {
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var model = new ProfileOverviewViewModel
+            {
+                UserId = currentUser.FbUserId,
+                UserName = currentUser.FirstName+ " " + currentUser.LastName
+            };
+            return View(model);
         }
     }
 }

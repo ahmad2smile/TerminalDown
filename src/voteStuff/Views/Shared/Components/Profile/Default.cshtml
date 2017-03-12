@@ -1,8 +1,8 @@
 ﻿@model ProfileModel
 
-@if (!String.IsNullOrWhiteSpace(Model.FirstName))
+@if (!string.IsNullOrWhiteSpace(Model.FirstName))
 {
-    <a class="profile-component valign-wrapper">
+    <a asp-controller="Account" asp-action="ProfileOverview" class="profile-component valign-wrapper">
         <img id="profile-pic-id" class="valign circle responsive-img" src="@Model.ProfilePicture" alt="" />
         <span class="valign">@Model.FirstName</span>
         <span class="badge white tooltipped" data-position="bottom" data-delay="50" data-tooltip="Voting Rights">@Model.ProfileVotingRight</span>
