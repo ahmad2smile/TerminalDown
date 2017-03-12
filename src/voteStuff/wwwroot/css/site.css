@@ -194,3 +194,16 @@ form#logOutForm a:hover {
 }
 
 /*Home DUo Card End*/
+
+
+/*about page socila icons */
+
+#social-icons li, #social-icons a, #social-icons h5{
+    color: #222222;
+    display: inline;
+    margin: 5px;
+    font-size: 1.4em;
+}
+
+/*about page socila icons end */
+
