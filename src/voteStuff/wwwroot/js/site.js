@@ -13,7 +13,7 @@
             let duoFirstVotes = document.getElementById('DuoFirstVotes').innerHTML;
             let duoSecondVotes = document.getElementById('DuoSecondVotes').innerHTML;
 
-            let data = [{ xData: "DuoFirst", yData: duoFirstVotes }, { xData: "DuoSecond", yData: duoSecondVotes }];
+            let data = [{ xData: "DuoFirst", yData: parseInt(duoFirstVotes,10) }, { xData: "DuoSecond", yData: parseInt(duoSecondVotes,10) }];
 
             let width = 150,
                 height = 300;
