@@ -3,7 +3,7 @@
 @if (!string.IsNullOrWhiteSpace(Model.FirstName))
 {
     <a asp-controller="Account" asp-action="ProfileOverview" class="profile-component valign-wrapper">
-        <img id="profile-pic-id" class="valign circle responsive-img" src="@Model.ProfilePicture" alt="" />
+        <img id="profile-pic-id" class="valign circle responsive-img" src="https://graph.facebook.com/@Model.FbUserId/picture" alt="" />
         <span class="valign">@Model.FirstName</span>
         <span class="badge white tooltipped" data-position="bottom" data-delay="50" data-tooltip="Voting Rights">@Model.ProfileVotingRight</span>
     </a>

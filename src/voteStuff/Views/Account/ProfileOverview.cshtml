@@ -1,4 +1,5 @@
-﻿@model ProfileOverviewViewModel
+﻿@using Humanizer
+@model ProfileOverviewViewModel
 
 @{
     ViewBag.Title = @Model.UserName + " TerminalDown";
@@ -14,13 +15,34 @@
                         <div class="profileOverviewContainer left-align">
                             <br />
                             <a asp-controller="Account" asp-action="ProfileOverview" class="black-text">
-                                <img src="https://graph.facebook.com/@Model.UserId/picture?type=normal" alt="" />
+                                <div class="profileOverview-imgContainer"><img src="https://graph.facebook.com/@Model.FbUserId/picture?type=normal" alt="" /></div>
                                 <h5>@Model.UserName</h5>
                                 <br />
                                 <br />
-                                <h6>All Duos you care about:</h6>
-
                             </a>
+                            <h6>All Duos you care about:</h6>
+                            <ul class="allVotedDuosCards">
+                                @foreach (var allDuoVotedByUser in Model.AllDuosVotedByUser)
+                                {
+                                    var duoId = 0;
+                                    duoId = (allDuoVotedByUser.DuoVotedByCurrentUserDb.DuoID == 1) ? 0 : allDuoVotedByUser.DuoVotedByCurrentUserDb.DuoID - 1;
+                                    int category = (int)allDuoVotedByUser.Category;
+                                    <li>
+                                        <a href="~/Home/Duos/?previousDuoId=@duoId&category=@category&nextOrPrev=1">
+                                            <div class="card-panel center-align">
+                                                <h6 class="black-text">
+                                                    @allDuoVotedByUser.DuoFirst vs @allDuoVotedByUser.DuoSecond
+                                                </h6>
+                                                <div class="ProfileOver_votedDuoTime black-text">
+                                                    Voted <span>@allDuoVotedByUser.DuoVotedByCurrentUserDb.VotingTime.Humanize()</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+
+
                         </div>
                     </div>
                 </div>

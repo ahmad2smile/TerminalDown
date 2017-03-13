@@ -33,23 +33,26 @@ namespace voteStuff.ViewComponents
                    await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == currentLogedInUser.Id);
 
                 string firstName = currentLogedInUser.FirstName;
-                var identifier = currentLogedInUser.FbUserId;
-                var picture = $"https://graph.facebook.com/{identifier}/picture";
+                var fbUserId = currentLogedInUser.FbUserId;
                 var totallVotingRights = currentUserVotingData.TotallVotingRights;
 
                 var model = new ProfileModel
                 {
                     FirstName = firstName,
-                    ProfilePicture = picture,
+                    FbUserId = fbUserId,
                     ProfileVotingRight = totallVotingRights
                 };
+                
+                //To reuse it for Profile Pic without calling the Database again and again
+                ViewBag.FbUserId = fbUserId;
+
                 return View("Default", model);
             }
 
             return View("Default", new ProfileModel
             {
                 FirstName = "",
-                ProfilePicture = "",
+                FbUserId = "",
                 ProfileVotingRight = 0
             });
         }

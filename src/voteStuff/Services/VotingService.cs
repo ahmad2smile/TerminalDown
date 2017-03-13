@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using voteStuff.Entities;
@@ -11,6 +13,7 @@ namespace voteStuff.Services
     public interface IVotingService
     {
         Task<VoteDuoViewModel> GetDuo(int id, ApplicationUser currentLogedInUser);
+        Task<ICollection<VoteDuoViewModel>> GetAllDuosVotedByCurrentUser(string currentLogedInUser);
         Task<bool> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser);
         Task<VoteDuoViewModel> VoteCast(int id, string votedDuoName, ApplicationUser currentLogedInUser);
     }
@@ -19,7 +22,7 @@ namespace voteStuff.Services
     {
         private readonly VoteDbContext _context;
         public DuoVotedByUserDb _duoVotedByCurrentUser;
-        private INextDuoService _nextDuoService;
+        private readonly INextDuoService _nextDuoService;
 
         public VotingService(VoteDbContext context, INextDuoService nextDuoService)
         {
@@ -150,6 +153,41 @@ namespace voteStuff.Services
                 };
             }
             return model;
+        }
+
+        public async Task<ICollection<VoteDuoViewModel>> GetAllDuosVotedByCurrentUser(string id)
+        {
+            var currentUserVotingDb = await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == id);
+            if (currentUserVotingDb == null) return new Collection<VoteDuoViewModel>();
+                
+//            this is how it should've been !! current implementation is a massive load on Db
+//            ICollection<DuoVotedByUserDb> dumyCollection = currentUserVotingDb.DuoVotedByUserDbList;
+
+            int currentUserVotingDbId = currentUserVotingDb.ID;
+            ICollection<DuoVotedByUserDb> duoVotedByCurrentUserDb = await 
+                _context.DuoVotedByUserDbs.Where(r => r.UserVotingDbID == currentUserVotingDbId).ToListAsync();
+            IOrderedEnumerable<DuoVotedByUserDb> orderedList = duoVotedByCurrentUserDb.OrderByDescending(r => r.VotingTime);
+
+            ICollection<VoteDuoViewModel> duosVotedByCurrentUserCollection = new Collection<VoteDuoViewModel>();
+
+            foreach (var duoVotedByCurrentUser in orderedList)
+            {
+                int votedDuoId = duoVotedByCurrentUser.DuoID;
+                var currentDuo = await _context.VotesDb.FirstOrDefaultAsync(r => r.Id == votedDuoId);
+                duosVotedByCurrentUserCollection.Add(new VoteDuoViewModel
+                {
+                    DuoFirst = currentDuo.DuoFirst,
+                    DuoFirstVotes = currentDuo.DuoFirstVotes,
+                    DuoSecond = currentDuo.DuoSecond,
+                    DuoSecondVotes = currentDuo.DuoSecondVotes,
+                    DuoTotalVotes = currentDuo.DuoTotalVotes,
+                    Category = currentDuo.Category,
+
+                    DuoVotedByCurrentUserDb = duoVotedByCurrentUser
+                });
+            }
+
+            return duosVotedByCurrentUserCollection;
         }
     }
 }

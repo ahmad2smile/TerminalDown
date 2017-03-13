@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using voteStuff.Entities;
 using voteStuff.Models;
+using voteStuff.Services;
 using voteStuff.ViewModels;
 
 namespace voteStuff.Controllers
@@ -15,16 +16,19 @@ namespace voteStuff.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly VoteDbContext _context;
+        private IVotingService _votingService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            VoteDbContext context
+            VoteDbContext context,
+            IVotingService votingService
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _votingService = votingService;
         }
 
         [HttpGet]
@@ -129,10 +133,14 @@ namespace voteStuff.Controllers
         public async Task<IActionResult> ProfileOverview()
         {
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+
+            var allDuosVotedByCurrentUser = await _votingService.GetAllDuosVotedByCurrentUser(currentUser.Id);
+
             var model = new ProfileOverviewViewModel
             {
-                UserId = currentUser.FbUserId,
-                UserName = currentUser.FirstName+ " " + currentUser.LastName
+                FbUserId = currentUser.FbUserId,
+                UserName = currentUser.FirstName+ " " + currentUser.LastName,
+                AllDuosVotedByUser = allDuosVotedByCurrentUser
             };
             return View(model);
         }
