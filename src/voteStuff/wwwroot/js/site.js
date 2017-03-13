@@ -13,7 +13,7 @@
             let duoFirstVotes = document.getElementById('DuoFirstVotes').innerHTML;
             let duoSecondVotes = document.getElementById('DuoSecondVotes').innerHTML;
 
-            let data = [{ xData: "DuoFirst", yData: parseInt(duoFirstVotes,10) }, { xData: "DuoSecond", yData: parseInt(duoSecondVotes,10) }];
+            let data = [{ xData: "DuoFirst", yData: parseInt(duoFirstVotes, 10) }, { xData: "DuoSecond", yData: parseInt(duoSecondVotes, 10) }];
 
             let width = 150,
                 height = 300;
@@ -60,7 +60,6 @@
     function updateDuo(data) {
         if (data) {
             $("#DuoFormsCon").html(data);
-            console.log(data);
         }
         duoGraph();
     }
@@ -70,29 +69,33 @@
     }
 
 
-    $('body').on("click", ".formClass", function (e) {
-        e.preventDefault();
-        let postData = {
-            id: $(this).children("[name = 'Id']")[0].value,
-            votedName: $(this).children("[name = 'VotedName']")[0].value
-        };
-        $.ajax({
-            method: "POST",
-            url: "/Home/Duos",
-            data: postData
-        })
-        .done(function (model) {
-            updateDuo(model);
-            $.ajax({
-                method: "GET",
-                url: "/Home/ProfileComponentUpdate",
-                dataType: "HTML"
-            })
-        .done(function (data) {
-            profileComponentUpdate(data);
+    let votingRights = parseInt($(".badge").html(), 10);
+
+    $('body').on("click", ".inputIcon", function (e) {
+            e.preventDefault();
+            let postData = {
+                id: $(this).parent().children("[name = 'Id']")[0].value,
+                votedName: $(this).parent().children("[name = 'VotedName']")[0].value
+            };
+            if (votingRights < 1) {
+                Materialize.toast("You don't have any Voting Rights", 4000);
+            } else {
+                $.ajax({
+                    method: "POST",
+                    url: "/Home/Duos",
+                    data: postData
+                }).done(function (model) {
+                        updateDuo(model);
+                        $.ajax({
+                            method: "GET",
+                            url: "/Home/ProfileComponentUpdate",
+                            dataType: "HTML"
+                        }).done(function (data) {
+                                profileComponentUpdate(data);
+                            });
+                    });
+            }
         });
-        });
-    });
 
     //    signalR stuff
 

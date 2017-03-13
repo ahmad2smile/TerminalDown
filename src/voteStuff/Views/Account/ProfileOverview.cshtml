@@ -20,7 +20,7 @@
                                 <br />
                                 <br />
                             </a>
-                            <h6>All Duos you care about:</h6>
+                            <h6>Duos you Voted:</h6>
                             <ul class="allVotedDuosCards">
                                 @foreach (var allDuoVotedByUser in Model.AllDuosVotedByUser)
                                 {
@@ -29,7 +29,7 @@
                                     int category = (int)allDuoVotedByUser.Category;
                                     <li>
                                         <a href="~/Home/Duos/?previousDuoId=@duoId&category=@category&nextOrPrev=1">
-                                            <div class="card-panel center-align">
+                                            <div class="card-panel siteColor center-align">
                                                 <h6 class="black-text">
                                                     @allDuoVotedByUser.DuoFirst vs @allDuoVotedByUser.DuoSecond
                                                 </h6>

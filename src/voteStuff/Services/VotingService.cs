@@ -21,7 +21,7 @@ namespace voteStuff.Services
     public class VotingService : IVotingService
     {
         private readonly VoteDbContext _context;
-        public DuoVotedByUserDb _duoVotedByCurrentUser;
+        private DuoVotedByUserDb _duoVotedByCurrentUser;
         private readonly INextDuoService _nextDuoService;
 
         public VotingService(VoteDbContext context, INextDuoService nextDuoService)
@@ -32,23 +32,16 @@ namespace voteStuff.Services
 
         public async Task<bool> didUserVotedThisDuo(int id, ApplicationUser currentLogedInUser)
         {
-            bool _didUserVotedThisDuo = false;
-
             var userVotingData =
                 await _context.UserVotingDbs.Where(r => r.UserID == currentLogedInUser.Id).FirstOrDefaultAsync();
 
-            if (userVotingData != null)
-            {
-                _duoVotedByCurrentUser =
+            if (userVotingData == null) return false;
+            _duoVotedByCurrentUser =
                     await _context.DuoVotedByUserDbs.FirstOrDefaultAsync(
                         r => r.DuoID == id && r.UserVotingDbID == userVotingData.ID);
-                if (_duoVotedByCurrentUser != null)
-                {
-                    _didUserVotedThisDuo = true;
-                }
-            }
-
-            return _didUserVotedThisDuo;
+            if (_duoVotedByCurrentUser != null)
+                return true;
+            return false;
         }
 
 
@@ -94,12 +87,14 @@ namespace voteStuff.Services
 
             var userVotingData =
                 await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == currentLogedInUser.Id);
+
+
             bool duoIsAlreadyVotedByUser = await didUserVotedThisDuo(id, currentLogedInUser);
             var model = new VoteDuoViewModel();
 
             if (VoteDuoData != null)
             {
-                if (!duoIsAlreadyVotedByUser)
+                if (!duoIsAlreadyVotedByUser && userVotingData.TotallVotingRights != 0)
                 {
                     userVotingData.TotallCastedVotes += 1;
                     userVotingData.TotallVotingRights -= 1;
@@ -140,6 +135,14 @@ namespace voteStuff.Services
 
                     return model;
                 }
+
+
+                if (userVotingData.TotallVotingRights == 0)
+                {
+                    duoIsAlreadyVotedByUser = false;
+                    _duoVotedByCurrentUser = new DuoVotedByUserDb();
+                }
+
                 model = new VoteDuoViewModel
                 {
                     Id = VoteDuoData.Id,
@@ -148,7 +151,7 @@ namespace voteStuff.Services
                     DuoSecond = VoteDuoData.DuoSecond,
                     DuoSecondVotes = VoteDuoData.DuoSecondVotes,
                     DuoTotalVotes = VoteDuoData.DuoTotalVotes,
-                    DuoIsAlreadyVotedByUser = true,
+                    DuoIsAlreadyVotedByUser = duoIsAlreadyVotedByUser,
                     DuoVotedByCurrentUserDb = _duoVotedByCurrentUser
                 };
             }
@@ -159,12 +162,12 @@ namespace voteStuff.Services
         {
             var currentUserVotingDb = await _context.UserVotingDbs.FirstOrDefaultAsync(r => r.UserID == id);
             if (currentUserVotingDb == null) return new Collection<VoteDuoViewModel>();
-                
-//            this is how it should've been !! current implementation is a massive load on Db
-//            ICollection<DuoVotedByUserDb> dumyCollection = currentUserVotingDb.DuoVotedByUserDbList;
+
+            //            this is how it should've been !! current implementation is a massive load on Db
+            //            ICollection<DuoVotedByUserDb> dumyCollection = currentUserVotingDb.DuoVotedByUserDbList;
 
             int currentUserVotingDbId = currentUserVotingDb.ID;
-            ICollection<DuoVotedByUserDb> duoVotedByCurrentUserDb = await 
+            ICollection<DuoVotedByUserDb> duoVotedByCurrentUserDb = await
                 _context.DuoVotedByUserDbs.Where(r => r.UserVotingDbID == currentUserVotingDbId).ToListAsync();
             IOrderedEnumerable<DuoVotedByUserDb> orderedList = duoVotedByCurrentUserDb.OrderByDescending(r => r.VotingTime);
 
